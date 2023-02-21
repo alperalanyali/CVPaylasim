@@ -9,6 +9,7 @@ const developerType = require('./routes/developerType');
 const programmingLanguages = require('./routes/programmingLanguage');
 const questions = require("./routes/question");
 const answers = require("./routes/answer");
+const cvRoute = require('./routes/cv');
 var cors = require('cors')
 const connectDatabase = require('./config/database');
 
@@ -31,6 +32,7 @@ app.use(apiURL,developerType);
 app.use(apiURL,programmingLanguages);
 app.use(apiURL,questions);
 app.use(apiURL,answers);
+app.use(apiURL,cvRoute);
 
 app.get('/',(req,res)=>{
     res.sendFile(__dirname+'/public/index.html')

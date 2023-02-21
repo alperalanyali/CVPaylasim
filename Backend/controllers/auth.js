@@ -2,8 +2,7 @@ const User = require('../models/users')
 var ObjectId = require('mongodb').ObjectId; 
 //Register new user => api/v1/register
 exports.registerUser = async (req,res,next)=>{
- const {firstName,lastName,email,password,roleId,developerTypes,profilePhoto} = req.body;
-    console.log(req.body);
+ const {firstName,lastName,email,password,roleId,developerTypes,profilePhoto} = req.body;    
     let user = new User({
         firstName: firstName,
         lastName: lastName,
@@ -16,7 +15,7 @@ exports.registerUser = async (req,res,next)=>{
     });
 
     user = await User.create(user);
-
+    
     res.status(200).json({
         success:true,
         message:"Kullanıcı başarılı şekilde oluşturulmuştur",

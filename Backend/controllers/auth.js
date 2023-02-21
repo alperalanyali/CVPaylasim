@@ -2,14 +2,14 @@ const User = require('../models/users')
 var ObjectId = require('mongodb').ObjectId; 
 //Register new user => api/v1/register
 exports.registerUser = async (req,res,next)=>{
- const {firstName,lastName,email,password,role,developerTypes,profilePhoto} = req.body;
+ const {firstName,lastName,email,password,roleId,developerTypes,profilePhoto} = req.body;
     console.log(req.body);
     let user = new User({
         firstName: firstName,
         lastName: lastName,
         email: email,
         password: password,
-        role: role,
+        roleId: roleId,
         developerTypes: developerTypes,
         educationBackground:"",
         profilePhoto : profilePhoto
@@ -19,7 +19,8 @@ exports.registerUser = async (req,res,next)=>{
 
     res.status(200).json({
         success:true,
-        message:"Kullanıcı başarılı şekilde oluşturulmuştur"
+        message:"Kullanıcı başarılı şekilde oluşturulmuştur",
+        data:user.roleId
     })
 }
 
@@ -30,7 +31,7 @@ exports.loginUser = async (req,res,next)=>{
         res.status(404).json({
             message:"Giriş yapabilmeniz için eposta ve şifreye gereklidir"
         })
-    let user = await User.findOne({email:email}).select('password');    
+    let user = await User.findOne({email:email});
     if(!user)
     res.status(401).json({
         success:false,
@@ -39,7 +40,8 @@ exports.loginUser = async (req,res,next)=>{
     if(password === user.password){
         res.status(200).json({
             success:true,
-            message:'Giriş yapabildiniz'
+            message:'Giriş yapabildiniz',
+            data:user
         })
     }else {
         res.status(401).json({
@@ -50,7 +52,7 @@ exports.loginUser = async (req,res,next)=>{
 }
 
 exports.getUserById = async(req,res,next)=>{
-    let userId = '63f368680301a26403550888'
+    let userId = req.params.userId
     let user = await User.findById(userId).populate("developerTypes").populate("languages");
 
     res.status(200).json({
@@ -60,10 +62,24 @@ exports.getUserById = async(req,res,next)=>{
 }
 
 exports.updateUser = async (req,res,next)=>{
-    let {userId,firstName,lastName,email,developerTypes,languages,educationBackground,profilePhoto,password} = req.body;
-    console.log(req.body);
-    user = await User.findByIdAndUpdate({_id:new ObjectId(userId),firstName: firstName,lastName: lastName,email: email,developerTypes:developerTypes,languages: languages,educationBackground: educationBackground,password:password},(err,result)=>{
-        console.log(err,result)
+    let {userId,firstName,lastName,email,developerTypes,languages,educationBackground,profilePhoto,password} = req.body;    
+    let newLanguages = languages.map(language => {
+        return new ObjectId(language);
+    });
+    let newDeveloperTypes = developerTypes.map((developerType)=>{
+            return new ObjectId(developerType);
+    });
+    
+    let user = await User.findByIdAndUpdate(userId,{
+        educationBackground:educationBackground,
+        languages:newLanguages,
+        developerTypes:newDeveloperTypes,
+        firstName:firstName,
+        lastName:lastName,
+        password:password,
+        profilePhoto:profilePhoto,
+        email:email
+        
     })
     console.log(user);
     res.status(200).json({

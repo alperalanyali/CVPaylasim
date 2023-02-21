@@ -10,7 +10,7 @@ const {
 //Register User => api/v1/register
 router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
-router.route("/getUserById").get(getUserById);
+router.route("/getUserById/:userId").get(getUserById);
 router.route("/updateUser").post(updateUser);
 
 

@@ -87,7 +87,7 @@ exports.createCV = async (req,res,next) =>{
         cvPath:path,
         name:name
     });
-    // cv = await cvModel.create(cv);
+    cv = await cvModel.create(cv);
     createPdf(htmlTemplate,name,path);
     res.status(200).json({
         success:true,
@@ -119,4 +119,27 @@ exports.getCvsByUserId = async (req,res,next) => {
         result:cvs.lenght,
         data:cvs
     })
+}
+
+exports.getCvs = async(req,res,next)=>{
+    let cvs = await cvModel.find().populate({
+        path:"userId",
+        populate:{
+            path:"languages",
+            model:"Languages" 
+        }
+    }
+    ).populate({
+        path:"userId",
+        populate:{
+            path:"developerTypes",
+            model:"DeveloperType"
+        }
+    })
+    console.log(cvs)
+    res.status(200).json({
+            success:true,
+            results:cvs.length,
+            data:cvs
+    });
 }

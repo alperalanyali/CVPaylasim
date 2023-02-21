@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const schemaOptions = {
+    
+}
 
 const cvSchema = mongoose.Schema({
     cvPath:{
@@ -11,6 +14,7 @@ const cvSchema = mongoose.Schema({
     },
     userId:{
             type: mongoose.Schema.ObjectId,
+            ref:"Users",
             required:true,
     },
     createdDate:{

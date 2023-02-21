@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const roles = ['user','admin'];
-
 
 const userSchema = new mongoose.Schema({
     firstName:{
@@ -19,13 +17,10 @@ const userSchema = new mongoose.Schema({
         type:String,
         require:["Lütfen eposta adresinizi giriniz"]
     },
-    role:{
-        type:String,
-        enum:{
-            values:roles,
-                message:"Lütfen kullanıcı tipinizi seçiniz"
-        },
-        default:'user'
+    roleId:{
+        type:mongoose.Schema.ObjectId,
+        ref:"roles",
+        required:["Lütfen rolünüzü seçiniz"]
     },
     password:{
         type:String,

@@ -26,3 +26,12 @@ exports.getLanguages = async (req,res,next)=>{
     })
     
 }
+
+exports.getLanguageById = async (req,res,next)=>{
+    let languageId = req.params.languageId;
+    var language = await Languages.findById(languageId);
+    res.status(200).json({
+        success:true,
+        data:language
+    })
+}
